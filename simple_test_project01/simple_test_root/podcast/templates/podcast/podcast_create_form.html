@@ -1,0 +1,7 @@
+<h2>Add Podcast</h2>
+<form method="post">
+<div>
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Submit" />
+</div>
+</form>
