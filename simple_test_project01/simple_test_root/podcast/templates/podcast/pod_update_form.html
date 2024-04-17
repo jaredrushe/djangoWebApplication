@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if request.user.is_staff %}
+        Update Podcast
+    {% else %}
+        Access Denied
+    {% endif %}
+{% endblock title %}
+
+{% block content %}
+<div class="container py-5" style="padding-bottom: 50px;">
+    <div class="row justify-content-start">
+        <div class="col-lg-8">
+            {% if request.user.is_staff %}
+            <h2 class="mb-4">Update Podcast</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_pod_name" class="form-label"><strong>Podcast Name:</strong></label>
+                    <br>
+                    {{ form.pod_name }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_pod_prod" class="form-label"><strong>Production Company:</strong></label>
+                    <br>
+                    {{ form.pod_prod }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_pod_pic" class="form-label"><strong>Cover Photo:</strong></label>
+                    <br>
+                    {{ form.pod_pic }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_description" class="form-label"><strong>Description:</strong></label>
+                    <br>
+                    {{ form.description }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_slide1" class="form-label"><strong>Slide 1:</strong></label>
+                    <br>
+                    {{ form.slide1 }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_slide2" class="form-label"><strong>Slide 2:</strong></label>
+                    <br>
+                    {{ form.slide2 }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_slide3" class="form-label"><strong>Slide 3:</strong></label>
+                    <br>
+                    {{ form.slide3 }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_twitter_link" class="form-label"><strong>Twitter Link:</strong></label>
+                    <br>
+                    {{ form.twitter_link }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_youtube_link" class="form-label"><strong>YouTube Link:</strong></label>
+                    <br>
+                    {{ form.youtube_link }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_spotify_link" class="form-label"><strong>Spotify Link:</strong></label>
+                    <br>
+                    {{ form.spotify_link }}
+                </div>
+                <button type="submit" class="btn btn-primary mb-5">Submit</button>
+            </form>
+            {% else %}
+            <div class="text-center">
+                <h2 class="mb-4">Access Denied</h2>
+                <p class="lead">You do not have permission to access this page.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

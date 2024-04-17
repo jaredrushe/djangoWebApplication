@@ -1,6 +1,143 @@
-<h3>Podcasts</h3>
-<ul>
-{% for pod in pod_list %}
-    <li>{{ podcast.pod_name }} ({{podcast.pod_type}})</li>
-{% endfor %}
-</ul>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Podcasts
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-4" style="padding-bottom: 100px;">
+    <h1 style="text-align: center; padding-bottom: 20px;">Podcasts</h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-4"> <!-- Use Bootstrap classes for flexbox layout -->
+        {% if request.user.is_staff %} <!-- Display Add Podcast button only for staff accounts -->
+        <div>
+            <a href="{% url 'podcastcreate' %}" class="btn btn-primary btn-lg">Add Podcast</a>
+        </div>
+        {% endif %}
+        <div class="d-flex align-items-center">
+            <div class="me-3">
+                <label for="sort-select" style="color: grey;">Sort by:</label>
+                <select id="sort-select" class="form-select">
+                    <option value="">Select</option>
+                    <option value="rating-high">Rating (High to Low)</option>
+                    <option value="rating-low">Rating (Low to High)</option>
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                </select>
+            </div>
+        
+            <div>
+                <label for="producer-select" style="color: grey; padding-left: 20px;">Filter by Producer:</label>
+
+                <select id="producer-select" class="form-select">
+                    <option value="">All Producers</option>
+                    <!-- Add options dynamically from producers in view -->
+                    {% for producer in unique_producers %}
+                        <option value="{{ producer }}">{{ producer }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="podcast-list">
+        {% for podcast in podcast_list %}
+        <div class="col-lg-4 col-md-6 mb-4 podcast-item">
+            <div class="card h-100">
+                <img src="{{ podcast.pod_pic.url }}" class="card-img-top" alt="{{ podcast.pod_name }}">
+                <div class="card-body" data-average-rating="{{ podcast.average_rating }}">
+                    <h5 class="card-title">
+                        <a href="{% url 'podcastdetail' podcast.id %}" style="text-decoration: none; color: inherit;" class="podcast-link">{{ podcast.pod_name }}</a>
+                    </h5>
+                    <p class="card-text">{{ podcast.pod_prod }}</p>
+                    <p class="card-text">
+                        {% if podcast.average_rating %}
+                            Average Rating: {{ podcast.average_rating|floatformat:"1" }}
+                        {% else %}
+                            No ratings yet
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        {% if request.user.is_staff %}
+                        <div>
+                            <a href="{% url 'podcastupdate' podcast.id %}" class="btn btn-outline-secondary">Edit</a>
+                            <a href="{% url 'podcastdelete' podcast.id %}" class="btn btn-outline-danger">Delete</a>
+                        </div>
+                        {% elif request.user.is_authenticated %}
+                        <div>
+                            <a href="{% url 'rate_podcast' podcast.id %}" class="btn btn-outline-primary">Rate Podcast</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var sortSelect = document.getElementById('sort-select');
+        var producerSelect = document.getElementById('producer-select');
+
+        sortSelect.addEventListener('change', function() {
+            var sortOption = this.value;
+            sortPodcasts(sortOption);
+        });
+
+        producerSelect.addEventListener('change', function() {
+            var producerFilter = this.value;
+            filterPodcastsByProducer(producerFilter);
+        });
+
+        function sortPodcasts(sortOption) {
+            var podcastList = document.getElementById('podcast-list');
+            var podcastItems = podcastList.getElementsByClassName('podcast-item');
+
+            var sortedItems = Array.from(podcastItems);
+
+            sortedItems.sort(function(a, b) {
+                if (sortOption === 'name-asc' || sortOption === 'name-desc') {
+                    var aText = a.querySelector('.card-title').textContent.trim().toLowerCase();
+                    var bText = b.querySelector('.card-title').textContent.trim().toLowerCase();
+                    if (sortOption === 'name-asc') {
+                        return aText.localeCompare(bText);
+                    } else {
+                        return bText.localeCompare(aText);
+                    }
+                } else if (sortOption === 'rating-high' || sortOption === 'rating-low') {
+                    var aRating = parseFloat(a.querySelector('.card-body').getAttribute('data-average-rating'));
+                    var bRating = parseFloat(b.querySelector('.card-body').getAttribute('data-average-rating'));
+                    if (sortOption === 'rating-high') {
+                        return bRating - aRating;
+                    } else {
+                        return aRating - bRating;
+                    }
+                }
+            });
+
+            // Re-append sorted items to the list
+            podcastList.innerHTML = ''; // Clear existing items
+            sortedItems.forEach(function(item) {
+                podcastList.appendChild(item);
+            });
+        }
+
+        function filterPodcastsByProducer(producerFilter) {
+            var podcastList = document.getElementById('podcast-list');
+            var podcastItems = podcastList.getElementsByClassName('podcast-item');
+
+            for (var i = 0; i < podcastItems.length; i++) {
+                var producerText = podcastItems[i].querySelector('.card-text').textContent.trim();
+                if (producerFilter === '' || producerText === producerFilter) {
+                    podcastItems[i].style.display = '';
+                } else {
+                    podcastItems[i].style.display = 'none';
+                }
+            }
+        }
+    });
+</script>
+{% endblock content %}

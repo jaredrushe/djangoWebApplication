@@ -1,43 +1,191 @@
 {% load static %}
-<!doctype html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}
-				Untitled Document
-			{% endblock title %}
-		</title>
-		<link href="{% static 'main.css' %}" rel="stylesheet" type="text/css">
-	</head>
-	<body>
-	<div id="wrapper">
-		<header id="header">
-			<div id="logo"><img src="{% static 'logo.jpg' %}" alt=""/></div>
-			<div id="topbanner"><img src="{% static 'banner.png' %}" width="798" height="114" alt=""/></div>
-		</header>
-		<aside id="leftsidebar">
-			<nav id="nav">
-				<ul>
-					{% block sidenav %}
-						<li>Menu 1</li>
-						<li>Menu 2</li>
-						<li>Menu 3</li>
-					{% endblock sidenav %}
-					<li><a href="{% url 'index' %}contact">Contact Us</a></li>
+<!DOCTYPE html>
 
-				</ul>
-			</nav>
-		</aside>
-		<section id="main">
-			{% block main_content %}
-				<h1>{{ title }}</h1>
-				{% autoescape off %}
-				<p>{{ content}}</p>
-				{% endautoescape %}
-			{% endblock main_content %}
-		</section>
-		<footer id="footer">{{welcome}}</footer>
-	</div>
-	</body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TeamTalks</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Custom styles */
+    body {
+      padding-top: 56px; /* Adjust according to navbar height */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Change font if needed */
+      background-color: #ffffff; /* Subtle background color */
+      color: #444;
+      min-height: 100vh; /* Make sure the body covers the whole viewport height */
+      position: relative; /* Make sure the footer stays at the bottom of the page */
+    }
+    .navbar {
+      background-color: #293058 !important; /* Dark navbar background */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand, .navbar-nav .nav-link {
+      color: #ffffff !important; /* Navbar text color */
+    }
+    .jumbotron {
+  background-image: url('/static/jumbotron.jpg'); /* Background image for the jumbotron */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  color: #ffffff; /* Text color on the jumbotron */
+  text-align: center;
+  height: 300px; /* You can adjust this height as needed */
+  padding: 100px 0;
+  margin-bottom: 0;
+  position: relative;
+  overflow: hidden;
+}
+    .jumbotron:before {
+      content: "";
+      background: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .jumbotron h1 {
+  font-size: 4rem; /* Increased font size */
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8); /* Increased text shadow */
+  margin-bottom: 20px; /* Added margin to separate from the paragraph */
+}
+
+.jumbotron p {
+  font-size: 1.8rem;
+  color: #ffffff; /* Increased font size */
+  font-weight: bold; /* Increased font weight */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adjusted text shadow */
+  margin-bottom: 40px; /* Increased margin for separation */
+}
+
+    .icon {
+      font-size: 3rem;
+      color: #007bff;
+      transition: all 0.3s ease;
+    }
+    .icon:hover {
+      transform: translateY(-5px);
+    }
+    .feature {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 30px;
+      margin-bottom: 100px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .feature h4 {
+      color: #007bff;
+      font-weight: bold;
+    }
+    .feature p {
+      color: #666;
+    }
+    .footer {
+      background-color: #293058;
+      color: white;
+      padding: 20px 0;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+    }
+    .footer p {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">TeamTalks</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'index' %}">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'podlist' %}">Podcasts</a>
+            
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
+          </li>
+          <li class="nav-item">
+            {% if user.is_authenticated %}
+            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+            {% endif %}
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {% block content %}
+  <!-- Default Main Content -->
+  <!-- Jumbotron -->
+  <div class="jumbotron">
+
+    <div class="container">
+        <h1 class="display-4">Welcome to TeamTalks</h1>
+        <p class="lead">The online database for your favourite football podcasts.</p>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature">
+          <i class="fas fa-heart icon"></i>
+          <h4>Rate</h4>
+          <p>Give your favourites a high score and see how they stack up using our ranking system.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature">
+          <i class="fas fa-desktop icon"></i>
+          <h4>Discover</h4>
+          <p>Sort by rating or filter by producer to find your next listen.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature">
+          <i class="fas fa-star icon"></i>
+          <h4>Discuss</h4>
+          <p>Leave a comment to share your thoughts with fellow podcast fanatics.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container text-center">
+      <p>&copy; 2024 TeamTalks</p>
+    </div>
+  </footer>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>

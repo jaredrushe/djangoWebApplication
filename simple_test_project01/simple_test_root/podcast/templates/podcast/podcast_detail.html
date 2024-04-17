@@ -1,2 +1,129 @@
-<h3>{{ podcast.pod_name }}</h3>
-<p>{{ podcast.pod_name }} is a {{ podcast.pod_type | lower }}</p>
+{% extends 'base.html' %}
+
+{% block title %}
+    Podcast Details
+{% endblock title %}
+
+{% block content %}
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .custom-slide-image {
+            width: 100%;
+            height: 400px; /* Set the fixed height for all slide images */
+            object-fit: cover; /* Ensure the image covers the entire container */
+        }
+        .card-text {
+            font-size: 14px; /* Adjust the font size as needed */
+        }
+        .card {
+            margin-top: 10px; /* Add some bottom margin */
+        }
+    </style>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-4">
+            <h3>{{ podcast.pod_name }}</h3>
+            <p>{{ podcast.description }}</p>
+            <p>Produced by {{ podcast.pod_prod }}.</p>
+            <ul>
+                {% if podcast.twitter_link %}
+                <li>
+                    <a href="{{ podcast.twitter_link }}"><i class="fab fa-twitter"></i></a>
+                    <a href="{{ podcast.twitter_link }}">Twitter</a>
+                </li>
+                {% endif %}
+                {% if podcast.youtube_link %}
+                <li>
+                    <a href="{{ podcast.youtube_link }}"><i class="fab fa-youtube"></i></a>
+                    <a href="{{ podcast.youtube_link }}">YouTube</a>
+                </li>
+                {% endif %}
+                {% if podcast.spotify_link %}
+                <li>
+                    <a href="{{ podcast.spotify_link }}"><i class="fab fa-spotify"></i></a>
+                    <a href="{{ podcast.spotify_link }}">Spotify</a>
+                </li>
+                {% endif %}
+            </ul>
+            <p>Average Rating: {% if podcast.average_rating %}{{ podcast.average_rating|floatformat:"1" }}/5{% else %}No ratings yet{% endif %}</p>
+        
+            <button id="show-comments-btn" class="btn btn-primary">Show Comments</button>
+            <div id="comments" style="display: none;">
+                {% if podcast.get_comments %}
+                    <div class="container">
+                        <div class="row">
+                            {% for comment, username, rating in podcast.get_comments %}
+                            <div class="col-md-12"> <!-- Adjust the column size -->
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title"><strong>{{ username }}</strong> - {{ rating }}/5</h6>
+                                        <p class="card-text">{{ comment }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <p>No comments yet.</p>
+                {% endif %}
+            </div>
+            
+            
+            
+        
+            <style>
+                #show-comments-btn {
+                    margin-top: 10px;
+                }
+                #show-comments-btn:hover {
+                    background-color: #0069d9;
+                }
+            </style>
+        
+            <script>
+                document.getElementById('show-comments-btn').addEventListener('click', function() {
+                    var commentsDiv = document.getElementById('comments');
+                    if (commentsDiv.style.display === 'none') {
+                        commentsDiv.style.display = 'block';
+                        this.textContent = 'Hide Comments';
+                    } else {
+                        commentsDiv.style.display = 'none';
+                        this.textContent = 'Show Comments';
+                    }
+                    
+                    // Calculate padding after toggling display
+                    var numComments = document.querySelectorAll('#comments .card').length;
+                    var padding = numComments * 40; // Adjust padding factor as needed
+                    commentsDiv.style.paddingBottom = padding + 'px';
+                });
+            </script>
+        </div>
+        <div class="col-lg-8 mb-4">
+            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ podcast.slide1.url }}" class="d-block w-100 custom-slide-image" alt="Slide 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ podcast.slide2.url }}" class="d-block w-100 custom-slide-image" alt="Slide 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ podcast.slide3.url }}" class="d-block w-100 custom-slide-image" alt="Slide 3">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

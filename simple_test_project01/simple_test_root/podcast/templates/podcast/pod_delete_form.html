@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if user.is_staff %}
+        Delete Podcast
+    {% else %}
+        Access Denied
+    {% endif %}
+{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6">
+            {% if user.is_staff %}
+            <h2 class="mb-4">Delete Podcast</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <p>Are you sure you want to delete "{{ podcast.pod_name }}"?</p>
+                </div>
+                <input type="submit" value="Confirm" class="btn btn-danger" />
+                <a href="{% url 'podlist' %}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+            {% else %}
+            <h2 class="mb-4">Access Denied</h2>
+            <p class="lead">You do not have permission to access this page.</p>
+            {% endif %}
+        </div>
+        <div class="col-lg-6">
+            {% if podcast.pod_pic %}
+            <img src="{{ podcast.pod_pic.url }}" alt="{{ podcast.pod_name }}" class="img-fluid" style="width: 300px; height: 300px;">
+
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+
+

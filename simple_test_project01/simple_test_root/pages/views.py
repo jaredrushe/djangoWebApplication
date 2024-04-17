@@ -2,28 +2,22 @@
 from django.shortcuts import render
 # from django.http import HttpResponse
 from . models import Page
-from datetime import date
-from datetime import date
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail, get_connection
 from .contact import ContactForm
-from django.http import Http404
 
-def index(request, pagename = ''):
-    print('Pagename: ' + pagename)
-    try:                            # Indent the next set of lines
-        pagename = '/' + pagename
-        pg = Page.objects.get(permalink=pagename)
-        context = {
-            'title': pg.title,
-            'content': pg.bodytext,
-            'last_updated': pg.update_date,
-            'page_list': Page.objects.all(),
-			'pic': pg.pic,
-        }
-        return render(request, 'pages/page.html', context)
-    except:
-        raise Http404("No model matches the given query.")
+def index(request, pagename=''):
+    print('Pagename:', pagename)
+    pagename = '/' + pagename
+    pg = Page.objects.get(permalink=pagename)
+    context = {
+        'title': pg.title,
+        'content': pg.bodytext,
+        'last_updated': pg.update_date,
+        'page_list': Page.objects.all(),
+        'pic': pg.pic,
+    }
+    return render(request, 'pages/page.html', context)
 
 def contact(request):
 	submitted = False
