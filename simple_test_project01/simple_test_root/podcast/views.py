@@ -5,17 +5,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Podcast
 from .forms import RatingForm
+from .models import Podcast, Rating
 
 class PodcastCreate(CreateView):
     model = Podcast
     template_name = 'podcast/podcast_create_form.html'
-    fields = ["pod_name", "pod_pic", "description", "slide1", "slide2", "slide3", "twitter_link", "youtube_link", "spotify_link"]
+    fields = ["pod_name", "pod_prod", "pod_pic", "description", "slide1", "slide2", "slide3", "twitter_link", "youtube_link", "spotify_link"]
 
 
 class PodcastUpdate(UpdateView):
     model = Podcast
     template_name = "podcast/pod_update_form.html"
-    fields = ["pod_name", "pod_pic", "description", "slide1", "slide2", "slide3", "twitter_link", "youtube_link", "spotify_link"]
+    fields = ["pod_name", "pod_prod", "pod_pic", "description", "slide1", "slide2", "slide3", "twitter_link", "youtube_link", "spotify_link"]
 
 
 class PodcastDelete(DeleteView):
