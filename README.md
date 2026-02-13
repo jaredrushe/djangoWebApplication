@@ -1,14 +1,17 @@
-# CA229 Project 2 Group 365
+# TeamTalks
 
-## Team Members:
-- Jared Rushe
+A football podcast database and community platform built with Django, inspired by IMDb.
 
-## Website Description:
-The website, named "TeamTalks," revolves around football podcasts. Users can create an account to access the site's full functionality. Administrators can enter the admin password to create staff accounts, but this privilege is restricted to administrators only.
+## Features
 
-The site hosts a substantial database of football podcasts, akin to IMDb. Users can search for podcasts based on ratings or producers and leave their own ratings and comments, visible to others.
+- User authentication with role-based access (regular users, staff, admin)
+- Searchable podcast database with filtering by rating and producer
+- User ratings and comments on podcasts
+- Staff dashboard for full CRUD management of podcast content
+- Contact page and other utility pages
 
-Staff users have access to a slightly modified version of the website. They can create, update, and delete content but are unable to leave ratings or comments.
+## Tech Stack
 
-Additionally, the website features other functionalities such as a "Contact Us" page.
-
+- **Backend:** Python, Django (MVT architecture)
+- **Frontend:** HTML, CSS, JavaScript
+- **Database:** SQLite (default Django)
